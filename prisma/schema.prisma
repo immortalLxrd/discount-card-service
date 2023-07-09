@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String               @id @unique @default(uuid())
+  first_name       String
+  last_name        String
+  phone_number     String               @unique
+  date_of_birth    DateTime
+  date_of_creation DateTime             @default(now())
+  email            String?
+  balance          Int                  @default(0)
+  permissions      Role                 @default(USER)
+  discount_cards   UsersDiscountCards[]
+}
+
+model DiscountCard {
+  id                  Int                  @id @unique @default(autoincrement())
+  name                String
+  discount_percentage Int                  @default(5)
+  date_of_creation    DateTime             @default(now())
+  users               UsersDiscountCards[]
+}
+
+model UsersDiscountCards {
+  user             User         @relation(fields: [user_id], references: [id])
+  user_id          String
+  discount_card    DiscountCard @relation(fields: [discount_card_id], references: [id])
+  discount_card_id Int
+
+  @@id([discount_card_id, user_id])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
