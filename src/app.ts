@@ -1,6 +1,6 @@
 import Fastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
-import { Prisma } from './database/prisma';
-import { Api } from './api/api.route';
+import { Container } from './container';
+import { IRoute } from './common/route.interface';
 
 type AppOptions = Partial<FastifyServerOptions>;
 
@@ -8,34 +8,31 @@ export class App {
   private readonly _options: AppOptions = {
     logger: true,
   };
-  public fastify: FastifyInstance = Fastify(this._options);
-  private _api: Api = new Api(this.fastify.prisma); // !!! REWRITE !!!
-  private _prisma: Prisma = new Prisma();
+  public readonly app: FastifyInstance = Fastify(this._options);
+  private readonly _api: IRoute;
+  private readonly _container: Container;
 
   constructor() {
+    this._container = Container.getInstance();
+    this._api = this._container.resolve('apiRoute');
+
     this.registerPlugins();
   }
 
   private registerPlugins = async (): Promise<void> => {
-    if (this._prisma.prismaPlugin) {
-      await this.fastify.register(this._prisma.prismaPlugin);
-    }
-
-    this._api = new Api(this.fastify.prisma); // !!! REWRITE !!!
-
-    await this.fastify.register(this._api.routes, {
+    await this.app.register(this._api.routes, {
       prefix: '/api',
     });
   };
 
   public init = async (): Promise<void> => {
-    await this.fastify
+    await this.app
       .listen({
         port: 4000,
         host: '::',
       })
       .catch((error) => {
-        this.fastify.log.error(error);
+        this.app.log.error(error);
         process.exit(1);
       });
   };

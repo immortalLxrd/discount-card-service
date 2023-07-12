@@ -1,6 +1,4 @@
 import { FastifyInstance } from 'fastify';
-import { UserController } from './user.controller';
-import { PrismaClient } from '@prisma/client';
 import { userSchema } from './user.schema';
 import { IUserController } from './user.controller.interface';
 import { IRoute } from '../../common/route.interface';
@@ -8,8 +6,8 @@ import { IRoute } from '../../common/route.interface';
 export class UserRoute implements IRoute {
   private readonly _userController: IUserController;
 
-  constructor(private readonly _prisma: PrismaClient) {
-    this._userController = new UserController(this._prisma);
+  constructor({ userController }: { userController: IUserController }) {
+    this._userController = userController;
   }
 
   public routes = async (app: FastifyInstance): Promise<void> => {
@@ -38,7 +36,6 @@ export class UserRoute implements IRoute {
       },
       handler: this._userController.getUserByIdHandler,
     });
-
     app.post('/', {
       schema: {
         body: {

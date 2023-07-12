@@ -1,9 +1,18 @@
 import { DiscountCard, PrismaClient } from '@prisma/client';
-import { DiscountCardID, PartialDiscountCard, UpdateDiscountCard } from './discountCard.model';
+import {
+  DiscountCardID,
+  PartialDiscountCard,
+  UpdateDiscountCard,
+} from './discountCard.model';
 import { IDiscountCardService } from './discountCard.service.interface';
+import { Prisma } from '../../database/prisma';
 
 export class DiscountCardService implements IDiscountCardService {
-  constructor(private readonly _prisma: PrismaClient) {}
+  private readonly _prisma: PrismaClient;
+
+  constructor({ prisma }: { prisma: Prisma }) {
+    this._prisma = prisma.PrismaClient;
+  }
 
   public async getDiscountCards(
     partialDiscountCard: PartialDiscountCard,
