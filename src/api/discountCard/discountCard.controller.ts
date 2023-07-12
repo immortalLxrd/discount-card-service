@@ -1,4 +1,4 @@
-import { DiscountCard, PrismaClient } from '@prisma/client';
+import { DiscountCard } from '@prisma/client';
 import { DiscountCardService } from './discountCard.service';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { DiscountCardID, PartialDiscountCard } from './discountCard.model';
@@ -8,8 +8,12 @@ import { IDiscountCardService } from './discountCard.service.interface';
 export class DiscountCardController implements IDiscountCardController {
   private readonly _discountCardService: IDiscountCardService;
 
-  constructor(private readonly _prisma: PrismaClient) {
-    this._discountCardService = new DiscountCardService(this._prisma);
+  constructor({
+    discountCardService,
+  }: {
+    discountCardService: DiscountCardService;
+  }) {
+    this._discountCardService = discountCardService;
   }
 
   public getDiscountCardsHandler = async (

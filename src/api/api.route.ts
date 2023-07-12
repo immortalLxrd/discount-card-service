@@ -1,19 +1,23 @@
 import { FastifyInstance } from 'fastify';
-import { PrismaClient } from '@prisma/client';
 import { IRoute } from '../common/route.interface';
-import { UserRoute } from './user/user.route';
-import { DiscountCardRoute } from './discountCard/discountCard.route';
-import { UsersDiscountCardsRoute } from './usersDiscountCards/usersDiscountCards.route';
 
-export class Api implements IRoute {
+export class ApiRoute implements IRoute {
   private readonly _userRoute: IRoute;
   private readonly _discountCard: IRoute;
   private readonly _usersDiscountCards: IRoute;
 
-  constructor(private _prisma: PrismaClient) {
-    this._userRoute = new UserRoute(this._prisma);
-    this._discountCard = new DiscountCardRoute(this._prisma);
-    this._usersDiscountCards = new UsersDiscountCardsRoute(this._prisma);
+  constructor({
+    userRoute,
+    discountCardRoute,
+    usersDiscountCardsRoute,
+  }: {
+    userRoute: IRoute;
+    discountCardRoute: IRoute;
+    usersDiscountCardsRoute: IRoute;
+  }) {
+    this._userRoute = userRoute;
+    this._discountCard = discountCardRoute;
+    this._usersDiscountCards = usersDiscountCardsRoute;
   }
 
   public routes = async (app: FastifyInstance): Promise<void> => {

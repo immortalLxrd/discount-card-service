@@ -1,4 +1,4 @@
-import { PrismaClient, UsersDiscountCards } from '@prisma/client';
+import { UsersDiscountCards } from '@prisma/client';
 import { UsersDiscountCardsService } from './usersDiscountCards.service';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { UserID } from '../user/user.model';
@@ -7,10 +7,12 @@ import { IUsersDiscountCardsService } from './usersDiscountCards.service.interfa
 export class UsersDiscountCardsController {
   private readonly _usersDiscountCardsService: IUsersDiscountCardsService;
 
-  constructor(private readonly _prisma: PrismaClient) {
-    this._usersDiscountCardsService = new UsersDiscountCardsService(
-      this._prisma,
-    );
+  constructor({
+    usersDiscountCardsService,
+  }: {
+    usersDiscountCardsService: UsersDiscountCardsService;
+  }) {
+    this._usersDiscountCardsService = usersDiscountCardsService;
   }
 
   public addUserCardHandler = async (

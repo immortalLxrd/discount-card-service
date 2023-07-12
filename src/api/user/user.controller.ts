@@ -1,15 +1,14 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { UserService } from './user.service';
 import { PartialUser, UpdateUser, UserID } from './user.model';
-import { PrismaClient, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { IUserController } from './user.controller.interface';
 import { IUserService } from './user.service.interface';
 
 export class UserController implements IUserController {
-  private readonly _userService: IUserService;
+  private _userService: IUserService;
 
-  constructor(private readonly _prisma: PrismaClient) {
-    this._userService = new UserService(this._prisma);
+  constructor({ userService }: { userService: IUserService }) {
+    this._userService = userService;
   }
 
   public getUserByIdHandler = async (
@@ -38,7 +37,6 @@ export class UserController implements IUserController {
     reply: FastifyReply,
   ): Promise<void> => {
     const { target, data } = request.body;
-
     reply.code(201).send(await this._userService.updateUser(target, data));
   };
 

@@ -1,9 +1,13 @@
 import { DiscountCard, PrismaClient, UsersDiscountCards } from '@prisma/client';
 import { UserID } from '../user/user.model';
 import { IUsersDiscountCardsService } from './usersDiscountCards.service.interface';
+import { Prisma } from '../../database/prisma';
 
 export class UsersDiscountCardsService implements IUsersDiscountCardsService {
-  constructor(private readonly _prisma: PrismaClient) {}
+  private readonly _prisma: PrismaClient;
+  constructor({ prisma }: { prisma: Prisma }) {
+    this._prisma = prisma.PrismaClient;
+  }
 
   public async addUserCard(
     userData: UsersDiscountCards,

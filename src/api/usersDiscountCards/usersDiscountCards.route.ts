@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client';
 import { UsersDiscountCardsController } from './usersDiscountCards.controller';
 import { FastifyInstance } from 'fastify';
 import { IRoute } from '../../common/route.interface';
@@ -9,10 +8,12 @@ import { IUsersDiscountCardsController } from './usersDiscountCards.controller.i
 export class UsersDiscountCardsRoute implements IRoute {
   private readonly _usersDiscountCardsController: IUsersDiscountCardsController;
 
-  constructor(private readonly _prisma: PrismaClient) {
-    this._usersDiscountCardsController = new UsersDiscountCardsController(
-      this._prisma,
-    );
+  constructor({
+    usersDiscountCardsController,
+  }: {
+    usersDiscountCardsController: UsersDiscountCardsController;
+  }) {
+    this._usersDiscountCardsController = usersDiscountCardsController;
   }
 
   public routes = async (app: FastifyInstance): Promise<void> => {

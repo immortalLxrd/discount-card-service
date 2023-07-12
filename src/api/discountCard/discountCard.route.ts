@@ -8,8 +8,12 @@ import { IRoute } from '../../common/route.interface';
 export class DiscountCardRoute implements IRoute {
   private _discountCardController: IDiscountCardController;
 
-  constructor(private readonly _prisma: PrismaClient) {
-    this._discountCardController = new DiscountCardController(this._prisma);
+  constructor({
+    discountCardController,
+  }: {
+    discountCardController: DiscountCardController;
+  }) {
+    this._discountCardController = discountCardController;
   }
 
   public routes = async (app: FastifyInstance): Promise<void> => {

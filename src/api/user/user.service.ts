@@ -1,9 +1,14 @@
 import { PrismaClient, User } from '@prisma/client';
 import { PartialUser, UpdateUser, UserID } from './user.model';
 import { IUserService } from './user.service.interface';
+import { Prisma } from '../../database/prisma';
 
 export class UserService implements IUserService {
-  constructor(private readonly _prisma: PrismaClient) {}
+  private readonly _prisma: PrismaClient;
+
+  constructor({ prisma }: { prisma: Prisma }) {
+    this._prisma = prisma.PrismaClient;
+  }
 
   public async getUsers(partialUserData: PartialUser): Promise<User[] | null> {
     return await this._prisma.user.findMany({
