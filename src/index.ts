@@ -1,6 +1,7 @@
 import { App } from './app';
+import { Container } from './container';
 
-const app = new App();
+const container: Container = Container.getInstance();
+const app: App = container.resolve('app');
+
 app.init();
-
-export { app };

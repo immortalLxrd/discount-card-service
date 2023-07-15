@@ -20,7 +20,7 @@ export class DiscountCardController implements IDiscountCardController {
     request: FastifyRequest<{ Params: PartialDiscountCard }>,
     reply: FastifyReply,
   ): Promise<void> => {
-    reply.send(
+    reply.code(200).send(
       await this._discountCardService.getDiscountCards(request.params),
     );
   };
@@ -29,7 +29,7 @@ export class DiscountCardController implements IDiscountCardController {
     request: FastifyRequest<{ Body: DiscountCard }>,
     reply: FastifyReply,
   ): Promise<void> => {
-    reply.send(
+    reply.code(201).send(
       await this._discountCardService.createDiscountCard(request.body),
     );
   };
@@ -42,7 +42,7 @@ export class DiscountCardController implements IDiscountCardController {
   ): Promise<void> => {
     const { target, data } = request.body;
 
-    reply.send(
+    reply.code(201).send(
       await this._discountCardService.updateDiscountCard(target, data),
     );
   };
@@ -53,7 +53,7 @@ export class DiscountCardController implements IDiscountCardController {
     }>,
     reply: FastifyReply,
   ): Promise<void> => {
-    reply.send(
+    reply.code(200).send(
       await this._discountCardService.deleteDiscountCard(request.body),
     );
   };

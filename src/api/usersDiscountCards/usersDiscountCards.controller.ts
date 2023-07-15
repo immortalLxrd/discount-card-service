@@ -15,19 +15,21 @@ export class UsersDiscountCardsController {
     this._usersDiscountCardsService = usersDiscountCardsService;
   }
 
-  public addUserCardHandler = async (
-    request: FastifyRequest<{ Body: UsersDiscountCards }>,
-    reply: FastifyReply,
-  ) => {
-    reply.send(await this._usersDiscountCardsService.addUserCard(request.body));
-  };
-
   public getUserCards = async (
     request: FastifyRequest<{ Querystring: UserID }>,
     reply: FastifyReply,
   ) => {
-    reply.send(
-      await this._usersDiscountCardsService.getUserCards(request.query),
-    );
+    reply
+      .code(200)
+      .send(await this._usersDiscountCardsService.getUserCards(request.query));
+  };
+
+  public addUserCardHandler = async (
+    request: FastifyRequest<{ Body: UsersDiscountCards }>,
+    reply: FastifyReply,
+  ) => {
+    reply
+      .code(201)
+      .send(await this._usersDiscountCardsService.addUserCard(request.body));
   };
 }

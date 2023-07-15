@@ -18,12 +18,15 @@ import { UsersDiscountCardsService } from './api/usersDiscountCards/usersDiscoun
 import { IUsersDiscountCardsController } from './api/usersDiscountCards/usersDiscountCards.controller.interface';
 import { IDiscountCardController } from './api/discountCard/discountCard.controller.interface';
 import { IUsersDiscountCardsService } from './api/usersDiscountCards/usersDiscountCards.service.interface';
+import { App } from './app';
 
 declare module '@fastify/awilix' {
   interface Cradle {
     prisma: Prisma;
 
-    apiRoute: ApiRoute;
+    app: App;
+
+    apiRoute: IRoute;
 
     userRoute: IRoute;
     userController: IUserController;
@@ -58,6 +61,8 @@ export class Container {
   private _registerDependencies(): void {
     this._container.register({
       prisma: asClass(Prisma, { lifetime: 'SINGLETON' }),
+
+      app: asClass(App, { lifetime: 'SCOPED' }),
 
       apiRoute: asClass(ApiRoute, { lifetime: 'SCOPED' }),
 
