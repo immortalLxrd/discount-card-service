@@ -15,21 +15,21 @@ export class UserController implements IUserController {
     request: FastifyRequest<{ Params: UserID }>,
     reply: FastifyReply,
   ): Promise<void> => {
-    reply.send(await this._userService.getUserById(request.params));
+    reply.code(200).send(await this._userService.getUserById(request.params));
   };
 
   public getUsersHandler = async (
     request: FastifyRequest<{ Querystring: PartialUser }>,
     reply: FastifyReply,
   ): Promise<void> => {
-    reply.send(await this._userService.getUsers(request.query));
+    reply.code(200).send(await this._userService.getUsers(request.query));
   };
 
   public createUserHandler = async (
     request: FastifyRequest<{ Body: User }>,
     reply: FastifyReply,
   ): Promise<void> => {
-    reply.code(200).send(await this._userService.createUser(request.body));
+    reply.code(201).send(await this._userService.createUser(request.body));
   };
 
   public updateUserHandler = async (
@@ -44,6 +44,6 @@ export class UserController implements IUserController {
     request: FastifyRequest<{ Body: UserID }>,
     reply: FastifyReply,
   ): Promise<void> => {
-    reply.send(await this._userService.deleteUser(request.body));
+    reply.code(200).send(await this._userService.deleteUser(request.body));
   };
 }

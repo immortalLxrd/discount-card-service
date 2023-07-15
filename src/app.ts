@@ -1,20 +1,31 @@
 import Fastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
-import { Container } from './container';
 import { IRoute } from './common/route.interface';
 
 type AppOptions = Partial<FastifyServerOptions>;
 
 export class App {
+  private readonly _envToLogger: any = {
+    development: {
+      transport: {
+        target: 'pino-pretty',
+        options: {
+          translateTime: 'HH:MM:ss Z',
+          ignore: 'pid,hostname',
+        },
+      },
+    },
+    production: true,
+    test: false,
+  };
   private readonly _options: AppOptions = {
-    logger: true,
+    logger:
+      (process.env.NODE_ENV && this._envToLogger[process.env.NODE_ENV]) ?? true,
   };
   public readonly app: FastifyInstance = Fastify(this._options);
   private readonly _api: IRoute;
-  private readonly _container: Container;
 
-  constructor() {
-    this._container = Container.getInstance();
-    this._api = this._container.resolve('apiRoute');
+  constructor({ apiRoute }: { apiRoute: IRoute }) {
+    this._api = apiRoute;
 
     this.registerPlugins();
   }
